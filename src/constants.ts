@@ -1,7 +1,7 @@
 // src/constants.ts
 
 // MANTENHA A URL DO SEU BACKEND AQUI
-export const GAS_API_URL = "https://script.google.com/macros/s/SEU_ID_DA_IMPLANTACAO_AQUI/exec";
+export const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzB2BoIohF7LcOrCV-Mvf3faUUm9jqqlBRZmeNrekU7BYmCVUP-kODUgNsje0xjWkuHIw/exec";
 
 // Definição da Trilha de Estudo
 export const LEARNING_PATH = [
