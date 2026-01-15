@@ -1,8 +1,9 @@
-// COLOQUE ABAIXO A URL DA SUA IMPLANTAÇÃO DO GOOGLE APPS SCRIPT
+// src/constants.ts
 
-export const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzB2BoIohF7LcOrCV-Mvf3faUUm9jqqlBRZmeNrekU7BYmCVUP-kODUgNsje0xjWkuHIw/exec";
+// MANTENHA A URL DO SEU BACKEND AQUI
+export const GAS_API_URL = "https://script.google.com/macros/s/SEU_ID_DA_IMPLANTACAO_AQUI/exec";
 
-// Definição da Trilha de Estudo (Baseado no Edital)
+// Definição da Trilha de Estudo
 export const LEARNING_PATH = [
     {
         id: 'portugues-interpretacao',
@@ -54,10 +55,10 @@ export const LEARNING_PATH = [
     }
 ];
 
-export const CATEGORIES = [...new Set(LEARNING_PATH.map(item => item.category))];
-
 export const EDITAL_CONTEXT = `
 Você é um tutor especialista para o concurso da Câmara de Caraguatatuba.
 Gere questões estilo VUNESP (múltipla escolha, 4 alternativas).
 Foque estritamente no tópico solicitado.
 `;
+
+export const CATEGORIES = Array.from(new Set(LEARNING_PATH.map(item => item.category)));
