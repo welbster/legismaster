@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ModuleGrid from './components/ModuleGrid';
 import QuizView from './components/QuizView';
-import AuthScreen from './components/AuthScreen'; // Importe a tela de login
+import AuthScreen from './components/AuthScreen';
+import MobileNav from './components/MobileNav'; // Importar novo componente
 import { api } from './services/api';
 import { generateSession } from './services/geminiService';
-import type { User, Question } from './types';
+import { User, Question } from './types';
 import { Loader2, Zap, Star, LogOut } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loadingApp, setLoadingApp] = useState(true);
+  const [view, setView] = useState<'dashboard' | 'quiz'>('dashboard'); // Controla a vista atual
 
-  // Estados do App
   const [activeModule, setActiveModule] = useState<any>(null);
   const [sessionQuestions, setSessionQuestions] = useState<Question[]>([]);
   const [isLoadingSession, setIsLoadingSession] = useState(false);
   const [loadingText, setLoadingText] = useState("Carregando...");
 
-  // Verificar se já tem usuário salvo no navegador
   useEffect(() => {
     const savedUser = localStorage.getItem('legismaster_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    if (savedUser) setUser(JSON.parse(savedUser));
     setLoadingApp(false);
   }, []);
 
@@ -44,6 +42,8 @@ export default function App() {
     setIsLoadingSession(true);
     setActiveModule(module);
     setLoadingText("Analisando seu desempenho...");
+    // Força a mudança para a vista de quiz se estiver no dashboard
+    setView('quiz');
 
     try {
       const [allQuestions, userHistory] = await Promise.all([
@@ -61,7 +61,7 @@ export default function App() {
       let finalSession: Question[] = [];
 
       if ((questionsToReview.length + questionsNew.length) < 5) {
-        setLoadingText("Criando novas questões focadas no Edital...");
+        setLoadingText("IA criando questões novas...");
         const aiQuestions = await generateSession(module.category, module.description);
         for (const q of aiQuestions) await api.saveQuestion(q);
         finalSession = [...questionsToReview, ...questionsNew, ...aiQuestions];
@@ -76,7 +76,7 @@ export default function App() {
 
     } catch (error) {
       console.error(error);
-      alert("Erro ao conectar com o servidor.");
+      alert("Erro ao conectar.");
       setActiveModule(null);
     } finally {
       setIsLoadingSession(false);
@@ -95,63 +95,80 @@ export default function App() {
 
   if (loadingApp) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-indigo-600" /></div>;
 
-  // SE NÃO TIVER USUÁRIO, MOSTRA TELA DE LOGIN
-  if (!user) {
-    return <AuthScreen onLoginSuccess={handleLoginSuccess} />;
-  }
+  if (!user) return <AuthScreen onLoginSuccess={handleLoginSuccess} />;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex">
-      {/* Passamos o logout para a Sidebar se quiser, ou colocamos no Header mobile */}
+    <div className="min-h-screen bg-slate-50 font-sans flex flex-col md:flex-row">
+      {/* Sidebar Desktop */}
       <Sidebar />
 
-      <main className="flex-1 md:ml-64 p-4 md:p-8">
-        <header className="flex justify-between items-center mb-8 sticky top-0 bg-slate-50/90 backdrop-blur z-10 py-2">
-          <div className="md:hidden font-bold text-xl text-indigo-700">LegisMaster</div>
+      {/* Conteúdo Principal */}
+      <main className="flex-1 md:ml-64 p-4 md:p-8 pb-24 md:pb-8 transition-all duration-300">
 
-          <div className="flex items-center gap-4 ml-auto">
-            <div className="flex items-center gap-2 text-orange-500 font-bold bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
-              <Zap size={18} fill="currentColor" /> {user.streak}
+        {/* Header (Status Bar) */}
+        <header className="flex justify-between items-center mb-6 sticky top-0 bg-slate-50/95 backdrop-blur z-20 py-2">
+          {/* Logo Mobile */}
+          <div className="md:hidden flex items-center gap-2">
+            <div className="bg-indigo-600 text-white p-1.5 rounded-lg font-bold text-sm">LM</div>
+            <span className="font-bold text-slate-800">LegisMaster</span>
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center gap-3 ml-auto">
+            <div className="flex items-center gap-1.5 text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded-full border border-orange-100 text-xs md:text-sm">
+              <Zap size={16} fill="currentColor" /> {user.streak}
             </div>
-            <div className="flex items-center gap-2 text-yellow-500 font-bold bg-yellow-50 px-3 py-1 rounded-full border border-yellow-100">
-              <Star size={18} fill="currentColor" /> {user.xp}
+            <div className="flex items-center gap-1.5 text-yellow-500 font-bold bg-yellow-50 px-2 py-1 rounded-full border border-yellow-100 text-xs md:text-sm">
+              <Star size={16} fill="currentColor" /> {user.xp}
             </div>
 
-            <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-              <div className="text-right hidden sm:block">
-                <div className="text-xs text-slate-500 font-medium">Candidato</div>
-                <div className="text-sm font-bold text-slate-800 leading-none">{user.name}</div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="w-9 h-9 bg-white text-slate-500 hover:text-red-600 rounded-full flex items-center justify-center border border-slate-200 transition-colors"
-                title="Sair"
-              >
-                <LogOut size={16} />
+            {/* Logout Desktop */}
+            <div className="hidden md:flex items-center gap-3 pl-4 border-l border-slate-200">
+              <span className="text-sm font-bold text-slate-800">{user.name}</span>
+              <button onClick={handleLogout} className="text-slate-400 hover:text-red-600 transition-colors">
+                <LogOut size={18} />
               </button>
             </div>
           </div>
         </header>
 
-        {isLoadingSession ? (
-          <div className="h-[60vh] flex flex-col items-center justify-center text-center animate-in fade-in">
-            <div className="relative">
-              <div className="w-16 h-16 border-4 border-slate-200 rounded-full"></div>
-              <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
-            </div>
-            <h2 className="text-xl font-bold text-slate-800 mt-6 mb-2">{loadingText}</h2>
-            <p className="text-slate-500 max-w-md">O sistema está personalizando seu treino para {activeModule?.title}.</p>
-          </div>
-        ) : activeModule && sessionQuestions.length > 0 ? (
-          <QuizView
-            questions={sessionQuestions}
-            userUuid={user.uuid}
-            onComplete={handleSessionComplete}
-          />
-        ) : (
+        {/* Área de Conteúdo */}
+        {view === 'dashboard' && !activeModule ? (
+          // Aqui você poderia colocar o componente Dashboard (com estatísticas) se tiver
           <ModuleGrid onStartModule={startModule} />
+        ) : (
+          // Área de Estudo
+          <>
+            {isLoadingSession ? (
+              <div className="h-[50vh] flex flex-col items-center justify-center text-center animate-in fade-in">
+                <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mb-4" />
+                <h2 className="text-lg font-bold text-slate-800">{loadingText}</h2>
+              </div>
+            ) : activeModule && sessionQuestions.length > 0 ? (
+              <QuizView
+                questions={sessionQuestions}
+                userUuid={user.uuid}
+                onComplete={handleSessionComplete}
+              />
+            ) : (
+              <ModuleGrid onStartModule={startModule} />
+            )}
+          </>
         )}
       </main>
+
+      {/* Menu Mobile Inferior */}
+      <MobileNav
+        currentView={view === 'dashboard' && !activeModule ? 'dashboard' : 'quiz'}
+        onChangeView={(v) => {
+          setView(v);
+          if (v === 'dashboard') {
+            setActiveModule(null); // Reseta para a home
+            setSessionQuestions([]);
+          }
+        }}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }
