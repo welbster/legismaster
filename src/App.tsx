@@ -6,7 +6,7 @@ import AuthScreen from './components/AuthScreen';
 import MobileNav from './components/MobileNav'; // Importar novo componente
 import { api } from './services/api';
 import { generateSession } from './services/geminiService';
-import { User, Question } from './types';
+import type { User, Question } from './types';
 import { Loader2, Zap, Star, LogOut } from 'lucide-react';
 
 export default function App() {
