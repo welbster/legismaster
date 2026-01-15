@@ -1,44 +1,49 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { EDITAL_CONTEXT } from "../constants";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+// ATUALIZADO: Lendo a nova variável
+const apiKey = import.meta.env.VITE_APP_AI_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export const generateSession = async (topic: string, description: string) => {
-  if (!genAI) throw new Error("API Key não configurada");
+  if (!genAI) throw new Error("API Key da IA não configurada (VITE_APP_AI_KEY)");
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-3-flash-preview", // Ou gemini-1.5-flash
+    model: "gemini-3-flash-preview", // Mantendo o modelo rápido
     generationConfig: {
       responseMimeType: "application/json",
-      temperature: 0.3
+      temperature: 0.2 // Mantendo a precisão
     }
   });
 
   const prompt = `
-    ATUE COMO BANCA EXAMINADORA VUNESP.
+    ATUE COMO UM PROFESSOR SÊNIOR DA BANCA VUNESP (CONCURSO CARAGUATATUBA).
     
-    TÓPICO: ${topic}
-    CONTEXTO: ${description}
+    CONTEXTO GERAL:
+    ${EDITAL_CONTEXT}
+    
+    TÓPICO DA AULA: ${topic}
+    DETALHES: ${description}
     
     TAREFA:
-    Gere 5 questões de múltipla escolha.
+    Gere um array JSON com 3 questões de múltipla escolha.
     
-    DIRETRIZ DE FONTE (IMPORTANTE):
-    1. Tente resgatar questões REAIS de concursos anteriores da VUNESP (Agente Adm, Oficial Legislativo, Câmaras Municipais).
-    2. Se usar uma questão real, preencha o campo "source" com: "Banca Ano - Órgão" (Ex: "VUNESP 2019 - Câmara de SJC").
-    3. Se não houver questão real exata na sua base, crie uma INÉDITA perfeita no estilo da banca e preencha "source" com: "Inédita - Simulado".
+    REGRAS RÍGIDAS DE LÓGICA (PARA EVITAR ERROS):
+    1. Se a questão envolver CÁLCULOS (Matemática) ou REFERÊNCIAS DE CÉLULAS (Excel $A$1):
+       - OBRIGATÓRIO: Realize o cálculo passo a passo internamente antes de escolher a alternativa correta.
+       - No Excel: Simule o deslocamento de linhas/colunas verificando onde está o cifrão ($).
+    2. As alternativas erradas devem ser plausíveis, mas tecnicamente incorretas.
+    3. Retorne APENAS o JSON, sem markdown.
     
     FORMATO JSON OBRIGATÓRIO:
     [
       {
         "category": "${topic}",
-        "difficulty": "Médio",
-        "question": "Enunciado...",
+        "difficulty": "Médio", 
+        "question": "Enunciado da questão...",
         "options": ["A", "B", "C", "D"],
-        "correctAnswer": "Texto da correta",
-        "explanation": "Comentário técnico.",
-        "source": "VUNESP 2023 - Pref. Sorocaba" 
+        "correctAnswer": "Texto EXATO da alternativa correta",
+        "explanation": "Explicação detalhada provando por A + B o motivo da resposta."
       }
     ]
   `;
@@ -55,39 +60,39 @@ export const generateSession = async (topic: string, description: string) => {
 };
 
 export const generateQuestionAI = async (topic: string) => {
-  if (!genAI) throw new Error("API Key não configurada");
+  if (!genAI) throw new Error("API Key da IA não configurada (VITE_APP_AI_KEY)");
 
   const model = genAI.getGenerativeModel({
     model: "gemini-3-flash-preview",
     generationConfig: {
       responseMimeType: "application/json",
-      temperature: 0.3
+      temperature: 0.2
     }
   });
 
   const prompt = `
-    ATUE COMO BANCA EXAMINADORA VUNESP.
+    ATUE COMO UM PROFESSOR SÊNIOR DA BANCA VUNESP (CONCURSO CARAGUATATUBA).
     
-    TÓPICO: ${topic}
-    CONTEXTO GERAL: ${EDITAL_CONTEXT}
+    CONTEXTO GERAL:
+    ${EDITAL_CONTEXT}
+    
+    TÓPICO QUIZ: ${topic}
     
     TAREFA:
-    Gere UMA (1) questão de múltipla escolha sobre o tópico solicitado.
+    Gere 1 (UMA) questão de múltipla escolha inédita.
     
-    DIRETRIZ DE FONTE (IMPORTANTE):
-    1. Tente resgatar questões REAIS de concursos anteriores da VUNESP (Agente Adm, Oficial Legislativo, Câmaras Municipais).
-    2. Se usar uma questão real, preencha o campo "source" com: "Banca Ano - Órgão" (Ex: "VUNESP 2019 - Câmara de SJC").
-    3. Se não houver questão real exata na sua base, crie uma INÉDITA perfeita no estilo da banca e preencha "source" com: "Inédita - Simulado".
+    REGRAS RÍGIDAS:
+    1. Alternativas erradas devem ser plausíveis.
+    2. Retorne APENAS o JSON, sem markdown.
     
-    FORMATO JSON OBRIGATÓRIO (apenas o objeto):
+    FORMATO JSON OBRIGATÓRIO (NÃO RETORNE ARRAY, APENAS O OBJETO):
     {
       "category": "${topic}",
-      "difficulty": "Médio",
-      "question": "Enunciado...",
+      "difficulty": "Médio", 
+      "question": "Enunciado da questão...",
       "options": ["A", "B", "C", "D"],
-      "correctAnswer": "Texto da correta",
-      "explanation": "Comentário técnico.",
-      "source": "VUNESP 2023 - Pref. Sorocaba" 
+      "correctAnswer": "Texto EXATO da alternativa correta",
+      "explanation": "Explicação detalhada."
     }
   `;
 

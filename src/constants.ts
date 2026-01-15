@@ -1,9 +1,13 @@
-// src/constants.ts
+// Validação simples para evitar erros difíceis de rastrear
+const apiUrl = import.meta.env.VITE_APP_API_URL;
 
-// MANTENHA A URL DO SEU BACKEND AQUI
-export const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzB2BoIohF7LcOrCV-Mvf3faUUm9jqqlBRZmeNrekU7BYmCVUP-kODUgNsje0xjWkuHIw/exec";
+if (!apiUrl) {
+    console.error("ERRO CRÍTICO: A URL da API não foi configurada no .env");
+}
 
-// Definição da Trilha de Estudo
+export const GAS_API_URL = apiUrl || "";
+
+// Definição da Trilha de Estudo (mantida igual)
 export const LEARNING_PATH = [
     {
         id: 'portugues-interpretacao',
@@ -55,10 +59,17 @@ export const LEARNING_PATH = [
     }
 ];
 
+
 export const EDITAL_CONTEXT = `
 Você é um tutor especialista para o concurso da Câmara de Caraguatatuba.
 Gere questões estilo VUNESP (múltipla escolha, 4 alternativas).
 Foque estritamente no tópico solicitado.
 `;
 
-export const CATEGORIES = Array.from(new Set(LEARNING_PATH.map(item => item.category)));
+export const CATEGORIES = [
+    "Língua Portuguesa",
+    "Legislação",
+    "Matemática",
+    "Noções de Informática",
+    "Conhecimentos Específicos"
+];
