@@ -6,44 +6,46 @@ const apiKey = import.meta.env.VITE_APP_AI_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export const generateSession = async (topic: string, description: string) => {
-  if (!genAI) throw new Error("API Key da IA não configurada (VITE_APP_AI_KEY)");
+  if (!genAI) throw new Error("API Key não configurada (VITE_APP_AI_KEY)");
 
   const model = genAI.getGenerativeModel({
-    model: "gemini-3-flash-preview", // Mantendo o modelo rápido
+    model: "gemini-3-flash-preview",
     generationConfig: {
       responseMimeType: "application/json",
-      temperature: 0.2 // Mantendo a precisão
+      temperature: 0.2 // Baixa temperatura para precisão nas leis
     }
   });
 
   const prompt = `
-    ATUE COMO UM PROFESSOR SÊNIOR DA BANCA VUNESP (CONCURSO CARAGUATATUBA).
+    ATUE COMO A BANCA VUNESP (CONCURSO CÂMARA DE CARAGUATATUBA).
     
-    CONTEXTO GERAL:
+    CONTEXTO DO EDITAL:
     ${EDITAL_CONTEXT}
     
-    TÓPICO DA AULA: ${topic}
-    DETALHES: ${description}
+    TÓPICO SOLICITADO: ${topic}
+    DESCRIÇÃO DO MÓDULO: ${description}
     
     TAREFA:
-    Gere um array JSON com 3 questões de múltipla escolha.
+    Gere 5 (cinco) questões de múltipla escolha.
     
-    REGRAS RÍGIDAS DE LÓGICA (PARA EVITAR ERROS):
-    1. Se a questão envolver CÁLCULOS (Matemática) ou REFERÊNCIAS DE CÉLULAS (Excel $A$1):
-       - OBRIGATÓRIO: Realize o cálculo passo a passo internamente antes de escolher a alternativa correta.
-       - No Excel: Simule o deslocamento de linhas/colunas verificando onde está o cifrão ($).
-    2. As alternativas erradas devem ser plausíveis, mas tecnicamente incorretas.
-    3. Retorne APENAS o JSON, sem markdown.
+    DIRETRIZES DE ESTILO VUNESP:
+    1. Se for MATEMÁTICA: Use situações-problema (ex: "Um funcionário precisa organizar arquivos..."). Calcule a resposta antes de definir o gabarito.
+    2. Se for PORTUGUÊS: Foque em interpretação de texto, crase, regência e concordância. Use frases formais.
+    3. Se for REDAÇÃO OFICIAL: Pergunte sobre o uso correto de pronomes de tratamento ou estrutura do padrão ofício segundo o Manual da Presidência.
+    4. Se for DIREITO/LEGISLAÇÃO:
+       - Para "Legislação Avançada": Nível Superior. Cobre Lei 14.133/21 ou LC 95/98 com profundidade.
+       - Para os demais: Nível Médio/Superior. Cobre Art. 5º da CF, Atos Administrativos e Lei 8.429/92.
     
     FORMATO JSON OBRIGATÓRIO:
     [
       {
         "category": "${topic}",
-        "difficulty": "Médio", 
+        "difficulty": "Médio", // ou "Difícil" se for tópico de Oficial
         "question": "Enunciado da questão...",
-        "options": ["A", "B", "C", "D"],
-        "correctAnswer": "Texto EXATO da alternativa correta",
-        "explanation": "Explicação detalhada provando por A + B o motivo da resposta."
+        "options": ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"], 
+        "correctAnswer": "Texto exato da correta",
+        "explanation": "Explicação citando o Artigo da Lei ou a regra gramatical.",
+        "source": "Inédita - Estilo VUNESP"
       }
     ]
   `;

@@ -1,75 +1,115 @@
-// Validação simples para evitar erros difíceis de rastrear
+import { BookOpen, Scale, FileText, Calculator, Gavel, Building2 } from 'lucide-react';
+
+// URL do Backend (Mantenha a sua configuração de ambiente ou a string direta se preferir)
 const apiUrl = import.meta.env.VITE_APP_API_URL;
+export const GAS_API_URL = apiUrl || "SUA_URL_DO_GAS_AQUI";
 
-if (!apiUrl) {
-    console.error("ERRO CRÍTICO: A URL da API não foi configurada no .env");
-}
-
-export const GAS_API_URL = apiUrl || "";
-
-// Definição da Trilha de Estudo (mantida igual)
+// --- TRILHA DE ESTUDO (Atualizada conforme Edital VUNESP 01/2025) ---
 export const LEARNING_PATH = [
     {
-        id: 'portugues-interpretacao',
-        title: 'Interpretação de Textos',
-        description: 'Compreensão, tipologia textual e ortografia oficial.',
+        id: 'portugues-vunesp',
+        title: 'Língua Portuguesa',
+        description: 'Interpretação, Crase, Concordância, Regência e Classes de Palavras.',
         category: 'Língua Portuguesa',
         icon: 'BookOpen',
         totalLevels: 5
     },
     {
-        id: 'const-principios',
-        title: 'Princípios Fundamentais',
-        description: 'Artigos 1º ao 4º da CF/88 e Direitos Garantias.',
-        category: 'Legislação',
-        icon: 'Scale',
-        totalLevels: 3
-    },
-    {
-        id: 'adm-publica',
-        title: 'Administração Pública',
-        description: 'Artigos 37 a 41 da CF e Lei de Improbidade.',
-        category: 'Legislação',
-        icon: 'Scale',
-        totalLevels: 4
-    },
-    {
-        id: 'matematica-basica',
-        title: 'Raciocínio Lógico e Matemática',
-        description: 'Razão, proporção, porcentagem e equações.',
+        id: 'matematica-vunesp',
+        title: 'Matemática e Raciocínio',
+        description: 'Razão, Proporção, Porcentagem, Equações, Geometria e Médias.',
         category: 'Matemática',
         icon: 'Calculator',
-        totalLevels: 4
+        totalLevels: 5
     },
     {
-        id: 'informatica-office',
-        title: 'Informática e Office',
-        description: 'Windows 11, Word, Excel e Segurança.',
-        category: 'Noções de Informática',
-        icon: 'Cpu',
+        id: 'redacao-oficial',
+        title: 'Redação Oficial',
+        description: 'Manual da Presidência da República: Pronomes de tratamento, ofícios e padrão culto.',
+        category: 'Conhecimentos Específicos',
+        icon: 'FileText',
         totalLevels: 3
     },
     {
-        id: 'legislacao-municipal',
-        title: 'Legislação Municipal',
-        description: 'Lei Orgânica e Regimento Interno de Caraguatatuba.',
+        id: 'direito-adm',
+        title: 'Direito Administrativo',
+        description: 'Princípios (LIMPE), Atos, Processo Administrativo e Improbidade (Lei 8.429/92).',
         category: 'Conhecimentos Específicos',
-        icon: 'FileText',
-        totalLevels: 5
+        icon: 'Building2',
+        totalLevels: 4
+    },
+    {
+        id: 'legislacao-const',
+        title: 'Constitucional e Legislativo',
+        description: 'Processo Legislativo, Art. 5º, Organização do Estado e Poderes.',
+        category: 'Conhecimentos Específicos',
+        icon: 'Scale',
+        totalLevels: 4
+    },
+    {
+        id: 'legislacao-avancada',
+        title: 'Legislação Avançada (Oficial)',
+        description: 'Licitações (14.133/21), LINDB, Eleitoral e Finanças Públicas.',
+        category: 'Conhecimentos Específicos',
+        icon: 'Gavel', // Ícone de martelo para leis pesadas
+        totalLevels: 4
     }
 ];
 
-
+// --- CONTEXTO EXATO DO EDITAL (Para a IA) ---
 export const EDITAL_CONTEXT = `
-Você é um tutor especialista para o concurso da Câmara de Caraguatatuba.
-Gere questões estilo VUNESP (múltipla escolha, 4 alternativas).
-Foque estritamente no tópico solicitado.
+VOCÊ É A BANCA VUNESP. O CONCURSO É PARA CÂMARA MUNICIPAL DE CARAGUATATUBA.
+CARGOS: AGENTE LEGISLATIVO (Médio) e OFICIAL LEGISLATIVO (Superior).
+
+GERE QUESTÕES ESTRITAMENTE DENTRO DESTES TÓPICOS:
+
+1. LÍNGUA PORTUGUESA (Comum a todos):
+- Leitura e interpretação de diversos tipos de textos (literários e não literários).
+- Sinônimos e antônimos. Sentido próprio e figurado. Pontuação.
+- Classes de palavras. Concordância verbal e nominal. Regência verbal e nominal.
+- Colocação pronominal. Crase.
+
+2. MATEMÁTICA (Comum a todos):
+- Operações com números racionais. Mínimo múltiplo comum e Máximo divisor comum.
+- Porcentagem. Razão e proporção. Regra de três simples ou composta.
+- Equações do 1º e 2º graus. Sistema de equações.
+- Grandezas e medidas (quantidade, tempo, comprimento, superfície, capacidade, massa).
+- Relação entre grandezas (tabela ou gráfico). Médias aritméticas.
+- Geometria: forma, ângulos, área, perímetro, volume, Teoremas de Pitágoras e Tales.
+
+3. CONHECIMENTOS ESPECÍFICOS (FUNDAMENTAL - LEGISLAÇÃO):
+
+A) DIREITO ADMINISTRATIVO E ADMINISTRAÇÃO PÚBLICA:
+- Princípios (Legalidade, Impessoalidade, Moralidade, Publicidade, Eficiência).
+- Administração Direta e Indireta. Atos Administrativos (conceitos, requisitos, atributos, anulação/revogação).
+- Poderes e deveres do administrador. Uso e abuso de poder.
+- Lei de Improbidade Administrativa (Lei nº 8.429/92 atualizada pela 14.230/21).
+- Processo Administrativo.
+
+B) DIREITO CONSTITUCIONAL E PROCESSO LEGISLATIVO:
+- Direitos e Garantias Fundamentais (Art. 5º). Direitos Sociais e Políticos.
+- Organização do Estado e Municípios.
+- Poder Legislativo: Atribuições, Processo Legislativo (emendas, leis, resoluções, iniciativa, quórum).
+- Fiscalização Contábil, Financeira e Orçamentária.
+
+C) REDAÇÃO OFICIAL (Muito Importante):
+- Manual de Redação da Presidência da República (3ª edição).
+- Pronomes de tratamento, estrutura de ofícios, memorandos, atas.
+- Concisão, clareza, impessoalidade e formalidade.
+
+D) TÓPICOS EXCLUSIVOS PARA NÍVEL SUPERIOR (OFICIAL LEGISLATIVO):
+- Lei de Licitações (Lei nº 14.133/2021).
+- LINDB (Dec-Lei 4.657/42). Elaboração de Leis (LC 95/98).
+- Finanças Públicas (Arts. 163 a 169 da CF).
+- Legislação Eleitoral: Inelegibilidades (LC 64/90) e Condutas Vedadas (Lei 9.504/97).
+
+IMPORTANTE:
+- Não crie questões de Informática (Hardware/Windows) como matéria isolada, pois não consta no edital de Conhecimentos Gerais para estes cargos.
+- Foque muito na "Lei Seca" e casos práticos estilo VUNESP.
 `;
 
 export const CATEGORIES = [
     "Língua Portuguesa",
-    "Legislação",
     "Matemática",
-    "Noções de Informática",
     "Conhecimentos Específicos"
 ];
