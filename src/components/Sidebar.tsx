@@ -1,4 +1,3 @@
-import React from 'react';
 import { Home, BookOpen, BarChart2, Settings, LogOut } from 'lucide-react';
 
 export default function Sidebar() {
