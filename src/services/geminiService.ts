@@ -1,7 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { EDITAL_CONTEXT } from "../constants";
 
-// ATUALIZADO: Lendo a nova variável
 const apiKey = import.meta.env.VITE_APP_AI_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
@@ -12,40 +11,37 @@ export const generateSession = async (topic: string, description: string) => {
     model: "gemini-3-flash-preview",
     generationConfig: {
       responseMimeType: "application/json",
-      temperature: 0.2 // Baixa temperatura para precisão nas leis
+      temperature: 0.1 // Mantendo baixo para fidelidade
     }
   });
 
   const prompt = `
-    ATUE COMO A BANCA VUNESP (CONCURSO CÂMARA DE CARAGUATATUBA).
-    
-    CONTEXTO DO EDITAL:
     ${EDITAL_CONTEXT}
     
-    TÓPICO SOLICITADO: ${topic}
-    DESCRIÇÃO DO MÓDULO: ${description}
+    TÓPICO DA SESSÃO ATUAL: ${topic}
+    DETALHES DO MÓDULO: ${description}
     
     TAREFA:
-    Gere 5 (cinco) questões de múltipla escolha.
+    Gere 5 (CINCO) questões de múltipla escolha.
     
-    DIRETRIZES DE ESTILO VUNESP:
-    1. Se for MATEMÁTICA: Use situações-problema (ex: "Um funcionário precisa organizar arquivos..."). Calcule a resposta antes de definir o gabarito.
-    2. Se for PORTUGUÊS: Foque em interpretação de texto, crase, regência e concordância. Use frases formais.
-    3. Se for REDAÇÃO OFICIAL: Pergunte sobre o uso correto de pronomes de tratamento ou estrutura do padrão ofício segundo o Manual da Presidência.
-    4. Se for DIREITO/LEGISLAÇÃO:
-       - Para "Legislação Avançada": Nível Superior. Cobre Lei 14.133/21 ou LC 95/98 com profundidade.
-       - Para os demais: Nível Médio/Superior. Cobre Art. 5º da CF, Atos Administrativos e Lei 8.429/92.
+    FILTRO DE CONTEÚDO (CRÍTICO):
+    - O tópico é "${topic}". Se for "Conhecimentos Específicos", foque em LEIS e REDAÇÃO OFICIAL.
+    - PROIBIDO gerar questões de Hardware, Windows, Excel ou Internet (Isso não cai para este cargo).
+    
+    CRITÉRIOS DE SELEÇÃO:
+    1. Se houver questão REAL da VUNESP (Câmaras de Araras, SJC, etc) sobre ESTE assunto (ex: Crase, Regra de Três, Lei 8.429), use-a.
+    2. Se for assunto local (Lei Orgânica de Caraguatatuba), crie uma INÉDITA imitando o estilo da Vunesp (texto da lei, alternativas longas).
     
     FORMATO JSON OBRIGATÓRIO:
     [
       {
         "category": "${topic}",
-        "difficulty": "Médio", // ou "Difícil" se for tópico de Oficial
-        "question": "Enunciado da questão...",
-        "options": ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"], 
-        "correctAnswer": "Texto exato da correta",
-        "explanation": "Explicação citando o Artigo da Lei ou a regra gramatical.",
-        "source": "Inédita - Estilo VUNESP"
+        "difficulty": "Médio",
+        "question": "Enunciado completo...",
+        "options": ["(A) ...", "(B) ...", "(C) ...", "(D) ...", "(E) ..."],
+        "correctAnswer": "(A) ...", // Deve ser idêntico a uma das options
+        "explanation": "Comentário detalhado. Se for Lei, cite o artigo. Se for Redação Oficial, cite a regra do Manual.",
+        "source": "VUNESP 2019 - Câmara de Sorocaba" // Ou "Inédita - Estilo VUNESP"
       }
     ]
   `;

@@ -1,23 +1,22 @@
 import { BookOpen, Scale, FileText, Calculator, Gavel, Building2 } from 'lucide-react';
 
-// URL do Backend (Mantenha a sua configuração de ambiente ou a string direta se preferir)
 const apiUrl = import.meta.env.VITE_APP_API_URL;
-export const GAS_API_URL = apiUrl || "SUA_URL_DO_GAS_AQUI";
+export const GAS_API_URL = apiUrl || "";
 
-// --- TRILHA DE ESTUDO (Atualizada conforme Edital VUNESP 01/2025) ---
+// TRILHA DE ESTUDO (Focada no Edital de Caraguatatuba)
 export const LEARNING_PATH = [
     {
         id: 'portugues-vunesp',
-        title: 'Língua Portuguesa',
-        description: 'Interpretação, Crase, Concordância, Regência e Classes de Palavras.',
+        title: 'Língua Portuguesa (VUNESP)',
+        description: 'Interpretação, Crase, Regência, Concordância e Classes de Palavras.',
         category: 'Língua Portuguesa',
         icon: 'BookOpen',
         totalLevels: 5
     },
     {
         id: 'matematica-vunesp',
-        title: 'Matemática e Raciocínio',
-        description: 'Razão, Proporção, Porcentagem, Equações, Geometria e Médias.',
+        title: 'Matemática (Situações-Problema)',
+        description: 'Razão, Proporção, Porcentagem, Equações e Geometria aplicada.',
         category: 'Matemática',
         icon: 'Calculator',
         totalLevels: 5
@@ -25,91 +24,55 @@ export const LEARNING_PATH = [
     {
         id: 'redacao-oficial',
         title: 'Redação Oficial',
-        description: 'Manual da Presidência da República: Pronomes de tratamento, ofícios e padrão culto.',
+        description: 'Manual da Presidência: Pronomes de tratamento, Ofício, Memorando e Ata.',
         category: 'Conhecimentos Específicos',
         icon: 'FileText',
         totalLevels: 3
     },
     {
-        id: 'direito-adm',
-        title: 'Direito Administrativo',
-        description: 'Princípios (LIMPE), Atos, Processo Administrativo e Improbidade (Lei 8.429/92).',
+        id: 'direito-adm-const',
+        title: 'Direito Adm. e Constitucional',
+        description: 'Art. 5º, 37-41 da CF/88, Princípios da Adm. e Lei de Improbidade.',
+        category: 'Legislação',
+        icon: 'Scale',
+        totalLevels: 4
+    },
+    {
+        id: 'legislacao-municipal',
+        title: 'Legislação Municipal',
+        description: 'Lei Orgânica de Caraguatatuba e Regimento Interno.',
         category: 'Conhecimentos Específicos',
         icon: 'Building2',
         totalLevels: 4
     },
     {
-        id: 'legislacao-const',
-        title: 'Constitucional e Legislativo',
-        description: 'Processo Legislativo, Art. 5º, Organização do Estado e Poderes.',
+        id: 'licitacoes-contratos',
+        title: 'Licitações (Oficial Legislativo)',
+        description: 'Lei 14.133/2021: Modalidades, Dispensa e Inexigibilidade.',
         category: 'Conhecimentos Específicos',
-        icon: 'Scale',
-        totalLevels: 4
-    },
-    {
-        id: 'legislacao-avancada',
-        title: 'Legislação Avançada (Oficial)',
-        description: 'Licitações (14.133/21), LINDB, Eleitoral e Finanças Públicas.',
-        category: 'Conhecimentos Específicos',
-        icon: 'Gavel', // Ícone de martelo para leis pesadas
-        totalLevels: 4
+        icon: 'Gavel',
+        totalLevels: 3
     }
 ];
 
-// --- CONTEXTO EXATO DO EDITAL (Para a IA) ---
+// CONTEXTO REFINADO - SEM INFORMÁTICA
 export const EDITAL_CONTEXT = `
-VOCÊ É A BANCA VUNESP. O CONCURSO É PARA CÂMARA MUNICIPAL DE CARAGUATATUBA.
-CARGOS: AGENTE LEGISLATIVO (Médio) e OFICIAL LEGISLATIVO (Superior).
+VOCÊ É A BANCA VUNESP. CONCURSO: CÂMARA DE CARAGUATATUBA.
+CARGOS: AGENTE E OFICIAL LEGISLATIVO.
 
-GERE QUESTÕES ESTRITAMENTE DENTRO DESTES TÓPICOS:
+BASE DE DADOS DE ESTILO (USE O ESTILO DESTAS PROVAS, MAS FILTRE O ASSUNTO):
+- Câmaras de: Araras, Piracicaba, Poá, SJC, Guaratinguetá, Sorocaba.
 
-1. LÍNGUA PORTUGUESA (Comum a todos):
-- Leitura e interpretação de diversos tipos de textos (literários e não literários).
-- Sinônimos e antônimos. Sentido próprio e figurado. Pontuação.
-- Classes de palavras. Concordância verbal e nominal. Regência verbal e nominal.
-- Colocação pronominal. Crase.
-
-2. MATEMÁTICA (Comum a todos):
-- Operações com números racionais. Mínimo múltiplo comum e Máximo divisor comum.
-- Porcentagem. Razão e proporção. Regra de três simples ou composta.
-- Equações do 1º e 2º graus. Sistema de equações.
-- Grandezas e medidas (quantidade, tempo, comprimento, superfície, capacidade, massa).
-- Relação entre grandezas (tabela ou gráfico). Médias aritméticas.
-- Geometria: forma, ângulos, área, perímetro, volume, Teoremas de Pitágoras e Tales.
-
-3. CONHECIMENTOS ESPECÍFICOS (FUNDAMENTAL - LEGISLAÇÃO):
-
-A) DIREITO ADMINISTRATIVO E ADMINISTRAÇÃO PÚBLICA:
-- Princípios (Legalidade, Impessoalidade, Moralidade, Publicidade, Eficiência).
-- Administração Direta e Indireta. Atos Administrativos (conceitos, requisitos, atributos, anulação/revogação).
-- Poderes e deveres do administrador. Uso e abuso de poder.
-- Lei de Improbidade Administrativa (Lei nº 8.429/92 atualizada pela 14.230/21).
-- Processo Administrativo.
-
-B) DIREITO CONSTITUCIONAL E PROCESSO LEGISLATIVO:
-- Direitos e Garantias Fundamentais (Art. 5º). Direitos Sociais e Políticos.
-- Organização do Estado e Municípios.
-- Poder Legislativo: Atribuições, Processo Legislativo (emendas, leis, resoluções, iniciativa, quórum).
-- Fiscalização Contábil, Financeira e Orçamentária.
-
-C) REDAÇÃO OFICIAL (Muito Importante):
-- Manual de Redação da Presidência da República (3ª edição).
-- Pronomes de tratamento, estrutura de ofícios, memorandos, atas.
-- Concisão, clareza, impessoalidade e formalidade.
-
-D) TÓPICOS EXCLUSIVOS PARA NÍVEL SUPERIOR (OFICIAL LEGISLATIVO):
-- Lei de Licitações (Lei nº 14.133/2021).
-- LINDB (Dec-Lei 4.657/42). Elaboração de Leis (LC 95/98).
-- Finanças Públicas (Arts. 163 a 169 da CF).
-- Legislação Eleitoral: Inelegibilidades (LC 64/90) e Condutas Vedadas (Lei 9.504/97).
-
-IMPORTANTE:
-- Não crie questões de Informática (Hardware/Windows) como matéria isolada, pois não consta no edital de Conhecimentos Gerais para estes cargos.
-- Foque muito na "Lei Seca" e casos práticos estilo VUNESP.
+REGRAS DE CONTEÚDO (ESTRITAS):
+1. NÃO GERE QUESTÕES DE INFORMÁTICA (Windows, Word, Excel, Hardware). Isso NÃO cai na prova teórica destes cargos.
+2. PORTUGUÊS: Estilo VUNESP clássico. Textos longos, questões de "sentido equivalente", crase antes de verbo/pronome, colocação pronominal.
+3. MATEMÁTICA: Situações-problema. Histórinhas que exigem regra de três, MDC/MMC ou áreas. Nada de cálculo seco.
+4. REDAÇÃO OFICIAL: Manual da Presidência da República. Pergunte sobre fechos (Atenciosamente x Respeitosamente), pronomes (Vossa Excelência x Vossa Senhoria) e estrutura do padrão ofício.
+5. LEGISLAÇÃO:
+   - Lei Orgânica de Caraguatatuba (crie inéditas imitando o estilo da VUNESP).
+   - Regimento Interno (crie inéditas focadas em Processo Legislativo e Mesa Diretora).
+   - Constituição (Arts 37-41) e Improbidade (Lei 8.429 atualizada).
+   - Lei 14.133 (Licitações) apenas para nível Superior.
 `;
 
-export const CATEGORIES = [
-    "Língua Portuguesa",
-    "Matemática",
-    "Conhecimentos Específicos"
-];
+export const CATEGORIES = LEARNING_PATH.map(m => m.title);
