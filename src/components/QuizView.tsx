@@ -58,7 +58,8 @@ export default function QuizView({ questions, userUuid, onComplete }: QuizViewPr
 
     // Layout da Questão
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto pb-32 md:pb-0"> {/* Adicionado padding bottom para scroll no mobile */}
+
             {/* Barra de Progresso */}
             <div className="w-full bg-slate-200 h-2.5 rounded-full mb-6">
                 <div className="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style={{ width: `${((index) / questions.length) * 100}%` }}></div>
@@ -66,7 +67,7 @@ export default function QuizView({ questions, userUuid, onComplete }: QuizViewPr
 
             <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden">
 
-                {/* --- NOVO: BADGE DE FONTE --- */}
+                {/* --- BADGE DE FONTE --- */}
                 <div className="flex justify-between items-start mb-6">
                     <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
                         {currentQ.category}
@@ -74,14 +75,13 @@ export default function QuizView({ questions, userUuid, onComplete }: QuizViewPr
 
                     {currentQ.source && (
                         <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider border ${currentQ.source.includes("Inédita")
-                                ? "bg-slate-50 text-slate-500 border-slate-200" // Cinza para simuladas
-                                : "bg-yellow-50 text-yellow-700 border-yellow-200" // Amarelo para Reais
+                            ? "bg-slate-50 text-slate-500 border-slate-200"
+                            : "bg-yellow-50 text-yellow-700 border-yellow-200"
                             }`}>
                             {currentQ.source.includes("Inédita") ? "🎯 Questão Inédita" : `🏛️ ${currentQ.source}`}
                         </span>
                     )}
                 </div>
-                {/* --------------------------- */}
 
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-8 leading-snug">
                     {currentQ.question}
@@ -93,14 +93,14 @@ export default function QuizView({ questions, userUuid, onComplete }: QuizViewPr
                             key={i}
                             onClick={() => !showResult && setSelected(opt)}
                             className={`w-full text-left p-4 rounded-xl border-2 transition-all ${showResult
-                                    ? opt === currentQ.correctAnswer
-                                        ? 'bg-green-50 border-green-500 text-green-800'
-                                        : opt === selected
-                                            ? 'bg-red-50 border-red-500 text-red-800'
-                                            : 'border-slate-100 opacity-50'
-                                    : selected === opt
-                                        ? 'bg-indigo-50 border-indigo-500 text-indigo-900'
-                                        : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+                                ? opt === currentQ.correctAnswer
+                                    ? 'bg-green-50 border-green-500 text-green-800'
+                                    : opt === selected
+                                        ? 'bg-red-50 border-red-500 text-red-800'
+                                        : 'border-slate-100 opacity-50'
+                                : selected === opt
+                                    ? 'bg-indigo-50 border-indigo-500 text-indigo-900'
+                                    : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
                                 }`}
                         >
                             <div className="flex items-center gap-4">
@@ -114,40 +114,41 @@ export default function QuizView({ questions, userUuid, onComplete }: QuizViewPr
                     ))}
                 </div>
 
-                {/* Feedback Area */}
-                <div className="mt-8 h-32">
-                    {showResult ? (
-                        <div className={`p-4 rounded-xl animate-in slide-in-from-bottom-2 ${selected === currentQ.correctAnswer ? 'bg-green-100 text-green-900' : 'bg-red-50 text-red-900'}`}>
-                            <div className="font-bold flex items-center gap-2 mb-1">
-                                {selected === currentQ.correctAnswer ? <CheckCircle size={20} /> : <XCircle size={20} />}
-                                {selected === currentQ.correctAnswer ? 'Excelente!' : 'Atenção aqui:'}
-                            </div>
-                            <p className="text-sm opacity-90">{currentQ.explanation}</p>
+                {/* Feedback Area (Apenas Texto) */}
+                {showResult && (
+                    <div className="mt-8 p-4 rounded-xl animate-in slide-in-from-bottom-2 bg-slate-50 border border-slate-200">
+                        <div className="font-bold flex items-center gap-2 mb-2">
+                            {selected === currentQ.correctAnswer ? (
+                                <><CheckCircle size={20} className="text-green-600" /> <span className="text-green-800">Excelente!</span></>
+                            ) : (
+                                <><XCircle size={20} className="text-red-600" /> <span className="text-red-800">Atenção aqui:</span></>
+                            )}
                         </div>
-                    ) : (
-                        <div className="flex justify-end">
-                            <button
-                                onClick={handleConfirm}
-                                disabled={!selected}
-                                className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                            >
-                                Verificar
-                            </button>
-                        </div>
-                    )}
-                </div>
+                        <p className="text-sm text-slate-700 leading-relaxed">{currentQ.explanation}</p>
+                    </div>
+                )}
             </div>
 
-            {showResult && (
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 md:static md:bg-transparent md:border-0 md:p-0 md:mt-4 flex justify-end animate-in fade-in">
+            {/* --- ÁREA DE AÇÃO FIXA (CORRIGIDA) --- */}
+            {/* bottom-[68px] garante que fique ACIMA do menu mobile */}
+            <div className="fixed bottom-[68px] md:bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur border-t border-slate-200 md:static md:bg-transparent md:border-0 md:p-0 md:mt-6 flex justify-end z-30 md:z-auto shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] md:shadow-none animate-in slide-in-from-bottom-2">
+                {showResult ? (
                     <button
                         onClick={handleNext}
-                        className={`px-8 py-3 rounded-xl font-bold flex items-center gap-2 text-white shadow-lg transition-transform hover:scale-105 ${selected === currentQ.correctAnswer ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-800 hover:bg-slate-900'}`}
+                        className="w-full md:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-lg transition-transform active:scale-95 bg-slate-900 hover:bg-slate-800"
                     >
                         Continuar <ArrowRight size={20} />
                     </button>
-                </div>
-            )}
+                ) : (
+                    <button
+                        onClick={handleConfirm}
+                        disabled={!selected}
+                        className="w-full md:w-auto bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 shadow-lg"
+                    >
+                        Verificar Resposta
+                    </button>
+                )}
+            </div>
         </div>
     );
 }
